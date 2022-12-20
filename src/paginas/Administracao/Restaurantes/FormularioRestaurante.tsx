@@ -1,4 +1,4 @@
-import { TextField, Button, Typography, Box } from '@mui/material'
+import { TextField, Button, Typography, Box, AppBar, Container, Toolbar, Link, Paper } from '@mui/material'
 import { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import http from '../../../http'
@@ -10,7 +10,7 @@ export default function FormulatrioRestaurante() {
 
     useEffect(() => {
         if (parametros.id) {
-            http.get<IRestaurante>(`restaurantes/${parametros.id}`)
+            http.get<IRestaurante>(`restaurantes/${parametros.id}/`)
                 .then(resposta => setNomeRestaurante(resposta.data.nome))
                 .catch(error => {
                     console.error(error)
@@ -47,11 +47,12 @@ export default function FormulatrioRestaurante() {
     }
 
     return (
-        <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+
+        <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', flexGrow: 1 }}>
             <Typography component='h1' variant='h6'>
                 Formulário de Restaurantes
             </Typography>
-            <Box component='form' onSubmit={aoSubmeterForm}>
+            <Box component='form' sx={{ width: '100%' }} onSubmit={aoSubmeterForm}>
                 <TextField
                     label="Nome do Restaurante"
                     variant="standard"
@@ -60,8 +61,9 @@ export default function FormulatrioRestaurante() {
                     fullWidth
                     required
                 />
-                <Button sx={{marginTop: 1}} type='submit' variant="outlined">Salvar</Button>
+                <Button sx={{ marginTop: 1 }} type='submit' variant="outlined">Salvar</Button>
             </Box>
         </Box>
+
     )
 }
