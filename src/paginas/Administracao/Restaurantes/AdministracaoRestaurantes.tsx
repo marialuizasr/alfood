@@ -1,4 +1,4 @@
-import { TableContainer, Paper, TableHead, Table } from '@mui/material'
+import { TableContainer, Paper, TableHead, Table, Button } from '@mui/material'
 import TableBody from '@mui/material/TableBody'
 import TableCell from '@mui/material/TableCell'
 import TableRow from '@mui/material/TableRow'
@@ -21,6 +21,17 @@ export default function AdministracaoRestaurantes() {
             })
     })
 
+    const excluir = (restauranteASerExcluido: IRestaurante) => {
+        axios.delete(`http://localhost:8000/api/v2/restaurantes/${restauranteASerExcluido.id}/`)
+            .then(() => {
+                const listaRestaurante = restaurantes.filter(restaurante => restaurante.id !== restauranteASerExcluido.id)
+                setRestaurantes([...listaRestaurante])
+            })
+            .catch(error => {
+                console.error(error)
+            })
+    }
+
     return (
         <TableContainer component={Paper}>
             <Table>
@@ -32,6 +43,9 @@ export default function AdministracaoRestaurantes() {
                         <TableCell>
                             Editar
                         </TableCell>
+                        <TableCell>
+                            Excluir
+                        </TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
@@ -42,6 +56,11 @@ export default function AdministracaoRestaurantes() {
                             </TableCell>
                             <TableCell>
                                 [ <Link to={`/admin/restaurantes/${restaurante.id}`}>editar</Link> ]
+                            </TableCell>
+                            <TableCell>
+                                <Button variant='outlined' color='error' onClick={() => excluir(restaurante)}>
+                                    Excluir
+                                </Button>
                             </TableCell>
                         </TableRow>)}
                 </TableBody>

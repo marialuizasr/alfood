@@ -12,6 +12,7 @@ function App() {
       <Route path="/restaurantes" element={<VitrineRestaurantes />} />
       <Route path='/admin/restaurantes' element={<AdministracaoRestaurantes />} />
       <Route path='/admin/restaurantes/novo' element={<FormulatrioRestaurante />} />
+      <Route path='/admin/restaurantes/:id' element={<FormulatrioRestaurante />} />
     </Routes>
   );
 }
