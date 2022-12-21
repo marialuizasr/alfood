@@ -1,12 +1,8 @@
-import { TableContainer, Paper, TableHead, Table, Button, Link } from '@mui/material'
-import TableBody from '@mui/material/TableBody'
-import TableCell from '@mui/material/TableCell'
-import TableRow from '@mui/material/TableRow'
-import { useEffect, useState } from 'react'
-import IRestaurante from '../../../interfaces/IRestaurante'
+import { Button, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@mui/material"
+import { useEffect, useState } from "react"
+import http from "../../../http"
+import IPrato from "../../../interfaces/IPrato"
 import { Link as RouterLink } from 'react-router-dom'
-import http from '../../../http'
-import IPrato from '../../../interfaces/IPrato'
 
 export default function AdministracaoPratos() {
 
@@ -15,7 +11,6 @@ export default function AdministracaoPratos() {
     useEffect(() => {
         http.get<IPrato[]>('pratos/')
             .then(resposta => setPratos(resposta.data))
-            .catch(erro => console.error(erro))
     })
 
     const excluir = (pratoASerExcluido: IPrato) => {
@@ -23,9 +18,6 @@ export default function AdministracaoPratos() {
             .then(() => {
                 const listaPratos = pratos.filter(prato => prato.id !== pratoASerExcluido.id)
                 setPratos([...listaPratos])
-            })
-            .catch(error => {
-                console.error(error)
             })
     }
 

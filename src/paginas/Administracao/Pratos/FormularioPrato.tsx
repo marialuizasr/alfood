@@ -9,24 +9,18 @@ import ITag from '../../../interfaces/ITag'
 
 export default function FormulatrioPrato() {
 
-    const [nomePrato, setNomePrato] = useState('')
-    const [descricaoPrato, setDescricaoPrato] = useState('')
-    const [tag, setTag] = useState('')
-    const [tags, setTags] = useState<ITag[]>([])
-    const [restaurantes, setRestaurantes] = useState<IRestaurante[]>([])
-    const [restaurante, setRestaurante] = useState('')
-    const [imagem, setImagem] = useState<File | null>(null)
-
     const parametros = useParams()
 
-    const selecionarArquivo = (evento: React.ChangeEvent<HTMLInputElement>) => {
-        if(evento.target.files?.length) {
-            setImagem(evento.target.files[0])
-        }
-        else {
-            setImagem(null)
-        }
-    }
+    const [nomePrato, setNomePrato] = useState('')
+    const [descricaoPrato, setDescricaoPrato] = useState('')
+
+    const [tag, setTag] = useState('')
+    const [tags, setTags] = useState<ITag[]>([])
+
+    const [restaurantes, setRestaurantes] = useState<IRestaurante[]>([])
+    const [restaurante, setRestaurante] = useState('')
+
+    const [imagem, setImagem] = useState<File | null>(null)
 
     useEffect(() => {
         http.get<{ tags: ITag[] }>('tags/')
@@ -35,37 +29,81 @@ export default function FormulatrioPrato() {
             .then(resposta => setRestaurantes(resposta.data))
     }, [])
 
-    useEffect(() => {
-        if (parametros.id) {
-            http.get<IPrato>(`pratos/${parametros.id}/`)
-                .then(resposta => setNomePrato(resposta.data.nome))
-                .catch(error => {
-                    console.error(error)
-                })
+    const selecionarArquivo = (evento: React.ChangeEvent<HTMLInputElement>) => {
+        if (evento.target.files?.length) {
+            setImagem(evento.target.files[0])
         }
-    }, [parametros])
+        else {
+            setImagem(null)
+        }
+    }
 
     const aoSubmeterForm = (evento: React.FormEvent<HTMLFormElement>) => {
         evento.preventDefault()
-        const formData = new FormData()
-        formData.append('nome', nomePrato)
-        formData.append('descricao', descricaoPrato)
-        formData.append('tag', tag)
-        formData.append('restaurante', restaurante)
-        if(imagem) {
-            formData.append('imagem', imagem)
+
+        if (parametros.id) {
+            const formData = new FormData()
+
+            formData.append('nome', nomePrato)
+            formData.append('descricao', descricaoPrato)
+
+            formData.append('tag', tag)
+
+            formData.append('restaurante', restaurante)
+
+            if (imagem) {
+                formData.append('imagem', imagem)
+            }
+
+            http.request({
+                url: `pratos/${parametros.id}`,
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                },
+                data: formData
+            })  .then(() => {
+                    setNomePrato('')
+                    setDescricaoPrato('')
+                    setTag('')
+                    setRestaurante('')
+                    alert('Prato atualizado com sucesso!')
+                })
+                .catch(erro => console.error(erro))
         }
 
-        http.request({
-            url: 'pratos/',
-            method: 'POST',
-            headers: {
-                'Content-Type': 'multipart/form-data'
-            },
-            data: formData
-        })
-            .then(resposta => alert('Prato cadastrado com sucesso!'))
-            .catch(erro => console.error(erro))
+        else {
+            const formData = new FormData()
+
+            formData.append('nome', nomePrato)
+            formData.append('descricao', descricaoPrato)
+
+            formData.append('tag', tag)
+
+            formData.append('restaurante', restaurante)
+
+            if (imagem) {
+                formData.append('imagem', imagem)
+            }
+
+            http.request({
+                url: 'pratos/',
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                },
+                data: formData
+            })  .then(() => {
+                    setNomePrato('')
+                    setDescricaoPrato('')
+                    setTag('')
+                    setRestaurante('')
+                    alert('Prato cadastrado com sucesso!')
+                })
+                .catch(erro => console.error(erro))
+        }
+
+
     }
 
     return (
@@ -109,8 +147,8 @@ export default function FormulatrioPrato() {
                         </MenuItem>)}
                     </Select>
                 </FormControl>
-                <input type="file" onChange={selecionarArquivo}/>
-                <Button sx={{ marginTop: 1 }} type='submit' variant="outlined">Salvar</Button>
+                <input type="file" onChange={selecionarArquivo} />
+                <Button sx={{ marginTop: 1 }} type='submit' fullWidth variant="outlined">Salvar</Button>
             </Box>
         </Box>
 

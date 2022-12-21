@@ -61,7 +61,7 @@ export default function FormulatrioRestaurante() {
                     fullWidth
                     required
                 />
-                <Button sx={{ marginTop: 1 }} type='submit' variant="outlined">Salvar</Button>
+                <Button sx={{ marginTop: 1 }} fullWidth type='submit' variant="outlined">Salvar</Button>
             </Box>
         </Box>
 

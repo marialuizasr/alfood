@@ -17,8 +17,10 @@ function App() {
         <Route path='restaurantes' element={<AdministracaoRestaurantes />} />
         <Route path='restaurantes/novo' element={<FormulatrioRestaurante />} />
         <Route path='restaurantes/:id' element={<FormulatrioRestaurante />} />
+        <Route path='pratos/:id' element={<FormularioPrato />} />
         <Route path='pratos' element={<AdministracaoPratos />} />
         <Route path='pratos/novo' element={<FormularioPrato />} />
+
       </Route>
     </Routes>
   );
